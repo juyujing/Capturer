@@ -30,6 +30,10 @@ cd /capturer
 ```
 </details>
 
+## Model Parameter Download
+- [.pt parameter file download](https://drive.google.com/file/d/1cYjeel8Tn4-sg-7VWGWGWIrWprRs_7OQ/view?usp=drive_link)
+- [.onnx parameter file download link](https://drive.google.com/file/d/10R5ECCBh2b9J1TIRrAcoTmRHNhMhBM-E/view?usp=drive_link)
+
 ## Run
 
 Deploy the ActionSet File Config.ini on 24-Way steering geer control board and boot it.
