@@ -33,14 +33,14 @@ void loop() {
           mySerial.print("$DGT:64-67,1!");  //总线口 调用 64到67 动作，执行1次 其他命令参照控制器指令
           delay(2);     
       }
-      if('c' == str){
+      if('h' == str){
           Serial.println("catch");    
-          mySerial.print("$DGT:398-406,1!");  //总线口 调用 398到406 动作，执行1次 其他命令参照控制器指令
+          mySerial.print("$DGT:402-410,1!");  //总线口 调用 398到406 动作，执行1次 其他命令参照控制器指令
           delay(2);     
       }
       if('d' == str){
           Serial.println("down");    
-          mySerial.print("$DGS:437!");  //总线口 调用 437 动作，执行1次 其他命令参照控制器指令
+          mySerial.print("$DGS:439!");  //总线口 调用 437 动作，执行1次 其他命令参照控制器指令
           delay(2);     
       }
       if('b' == str){
@@ -50,17 +50,17 @@ void loop() {
       }
       if('q' == str){
           Serial.println("slightly down");    
-          mySerial.print("$DGS:436!");  //总线口 调用 436 动作，执行1次 其他命令参照控制器指令
+          mySerial.print("$DGS:438!");  //总线口 调用 436 动作，执行1次 其他命令参照控制器指令
           delay(2);     
       }
       if('z' == str){
           Serial.println("slightly left");    
-          mySerial.print("$DGT:439-442,1!");  //总线口 调用 439到442 动作，执行1次 其他命令参照控制器指令
+          mySerial.print("$DGT:441-444,1!");  //总线口 调用 439到442 动作，执行1次 其他命令参照控制器指令
           delay(2);     
       }
       if('y' == str){
           Serial.println("slightly right");    
-          mySerial.print("$DGT:459-462,1!");  //总线口 调用 459到462 动作，执行1次 其他命令参照控制器指令
+          mySerial.print("$DGT:445-448,1!");  //总线口 调用 459到462 动作，执行1次 其他命令参照控制器指令
           delay(2);     
       }
       if('t' == str){
@@ -70,7 +70,17 @@ void loop() {
       }
       if('a' == str){
           Serial.println("four leg left");    
-          mySerial.print("$DGT:421-424,1!");  //总线口 调用 421到424 动作，执行1次 其他命令参照控制器指令
+          mySerial.print("$DGT:425-428,1!");  //总线口 调用 421到424 动作，执行1次 其他命令参照控制器指令
+          delay(2);     
+      }
+      if('m' == str){
+          Serial.println("four leg forward");    
+          mySerial.print("$DGT:419-422,1!");  //总线口 调用 421到424 动作，执行1次 其他命令参照控制器指令
+          delay(2);     
+      }
+      if('p' == str){
+          Serial.println("reset");    
+          mySerial.print("$DGS:2!");  //总线口 调用 421到424 动作，执行1次 其他命令参照控制器指令
           delay(2);     
       }
 }
