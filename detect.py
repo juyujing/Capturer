@@ -122,6 +122,7 @@ def detect(save_img=False):
             if len(det)<=0:
                 print("not found")
                 i = random.randint(1, 10)
+                distance = 3
                 try:
                     while True:
                         GPIO.output(TRIG, 0)
@@ -131,54 +132,53 @@ def detect(save_img=False):
                         time.sleep(0.00001)
                         GPIO.output(TRIG, 0)
 
-                        
                         while GPIO.input(ECHO) == 0:
-                                a = 0
+                            a = 0
                         time1 = time.time()
                         while GPIO.input(ECHO) == 1:
-                                a = 1
+                            a = 1
                         time2 = time.time()
 
                         during = time2 - time1
                         faraway = during * 343 / 2 * 100
                         print("Faraway", during * 343 / 2 * 100)
-                        if during!=0:
+                        if during != 0:
                             break
 
                 except KeyboardInterrupt:
                     GPIO.cleanup()
-                
+
                 print("forward")
-                start_time=time.time()
+                start_time = time.time()
                 while True:
                     ser.write('f'.encode())
-                    elapsed_time=time.time()-start_time
-                    if elapsed_time>=3:
+                    elapsed_time = time.time() - start_time
+                    if elapsed_time >= 3:
                         break
-                       
-                if i%2==0:
+
+                if i % 2 == 0:
                     print("slightly left")
-                    start_time=time.time()
+                    start_time = time.time()
                     while True:
                         ser.write('z'.encode())
-                        elapsed_time=time.time()-start_time
-                        if elapsed_time>=10*distance:#distance是每次返回的值，逐帧更新
-                            break      
+                        elapsed_time = time.time() - start_time
+                        if elapsed_time >= 10 * distance:  # distance是每次返回的值，逐帧更新
+                            break
                 else:
                     print("slightly right")
-                    start_time=time.time()
+                    start_time = time.time()
                     while True:
                         ser.write('y'.encode())
-                        elapsed_time=time.time()-start_time
-                        if elapsed_time>=10*distance:#distance是每次返回的值，逐帧更新
+                        elapsed_time = time.time() - start_time
+                        if elapsed_time >= 10 * distance:  # distance是每次返回的值，逐帧更新
                             break
-                            
+
                 print("slightly down")
-                start_time=time.time()
+                start_time = time.time()
                 while True:
                     ser.write('q'.encode())
-                    elapsed_time=time.time()-start_time
-                    if elapsed_time>=5:
+                    elapsed_time = time.time() - start_time
+                    if elapsed_time >= 5:
                         break
 
             if len(det):
@@ -192,12 +192,12 @@ def detect(save_img=False):
 
                 # Write results
                 for *xyxy, conf, cls in reversed(det):
-                    xywh=[]
+                    xywh = []
                     xywh = (xyxy2xywh(torch.tensor(xyxy).view(1, 4)) / gn).view(-1).tolist()  # normalized xywh
-                    #xywh[0]  x
-                    #xywh[1]  y
-                    #xywh[2]  w
-                    #xywh[3]  h
+                    # xywh[0]  x
+                    # xywh[1]  y
+                    # xywh[2]  w
+                    # xywh[3]  h
 
                     try:
                         while True:
@@ -208,434 +208,433 @@ def detect(save_img=False):
                             time.sleep(0.00001)
                             GPIO.output(TRIG, 0)
 
-                            
                             while GPIO.input(ECHO) == 0:
-                                    a = 0
+                                a = 0
                             time1 = time.time()
                             while GPIO.input(ECHO) == 1:
-                                    a = 1
+                                a = 1
                             time2 = time.time()
 
                             during = time2 - time1
                             faraway = during * 343 / 2 * 100
                             print("Faraway", during * 343 / 2 * 100)
-                            if during!=0:
+                            if during != 0:
                                 break
 
                     except KeyboardInterrupt:
-                            GPIO.cleanup()
-                            
-                    print("x ",xywh[0])
+                        GPIO.cleanup()
+
+                    print("x ", xywh[0])
                     print("new round")
                     # 1 mid
-                    if xywh[0]<0.72 and xywh[0]>0.57:
-                        print("x ",xywh[0])
-                        start_time=time.time()
+                    if xywh[0] < 0.72 and xywh[0] > 0.57:
+                        print("x ", xywh[0])
+                        start_time = time.time()
                         print("forward")
                         while True:
                             ser.write('f'.encode())
-                            elapsed_time=time.time()-start_time
-                            if elapsed_time>=5:
+                            elapsed_time = time.time() - start_time
+                            if elapsed_time >= 5:
                                 break
 
-                        if xywh[2]*xywh[3]>0.58:#ideal condition
-                            start_time=time.time()
+                        if xywh[2] > 0.49 or xywh[3] > 0.5:  # ideal condition
+                            start_time = time.time()
                             print("catch")
                             while True:
-                                ser.write('c'.encode())
-                                elapsed_time=time.time()-start_time
-                                if elapsed_time>=6:
+                                ser.write('h'.encode())
+                                elapsed_time = time.time() - start_time
+                                if elapsed_time >= 6:
                                     break
-                            return_pos()      
+                            return_pos()
                             exit()
-                        start_time=time.time()
+                        start_time = time.time()
                         print("slightly down")
                         while True:
                             ser.write('q'.encode())
-                            elapsed_time=time.time()-start_time
-                            if elapsed_time>=3:
+                            elapsed_time = time.time() - start_time
+                            if elapsed_time >= 3:
                                 break
                             # detect catch
-                            print("faraway ",faraway)
-                            if faraway<16 and faraway>14:#if xywh[3]<0.47 and xywh[3]>0.42
-                                start_time=time.time()
+                            print("faraway ", faraway)
+                            if faraway < 16 and faraway > 14:  # if xywh[3]<0.47 and xywh[3]>0.42
+                                start_time = time.time()
                                 print("catch")
                                 while True:
-                                    ser.write('c'.encode())
-                                    elapsed_time=time.time()-start_time
-                                    if elapsed_time>=6:
+                                    ser.write('h'.encode())
+                                    elapsed_time = time.time() - start_time
+                                    if elapsed_time >= 6:
                                         break
-                                return_pos()      
+                                return_pos()
                                 exit()
 
 
                     # 1 left
-                    elif xywh[0]<0.57:
-                        print("x ",xywh[0])
-                        start_time=time.time()
+                    elif xywh[0] < 0.57:
+                        print("x ", xywh[0])
+                        start_time = time.time()
                         print("slightly turn left")
                         while True:
                             ser.write('z'.encode())
-                            elapsed_time=time.time()-start_time
-                            if elapsed_time>=3:
+                            elapsed_time = time.time() - start_time
+                            if elapsed_time >= 3:
                                 break
 
-                        if xywh[2]*xywh[3]>0.58:#ideal condition
-                            start_time=time.time()
+                        if xywh[2] > 0.49 or xywh[3] > 0.5:  # ideal condition
+                            start_time = time.time()
                             print("catch")
                             while True:
-                                ser.write('c'.encode())
-                                elapsed_time=time.time()-start_time
-                                if elapsed_time>=6:
+                                ser.write('h'.encode())
+                                elapsed_time = time.time() - start_time
+                                if elapsed_time >= 6:
                                     break
-                            return_pos()      
+                            return_pos()
                             exit()
 
-                        start_time=time.time()
+                        start_time = time.time()
                         print("forward")
                         while True:
                             ser.write('f'.encode())
-                            elapsed_time=time.time()-start_time
-                            if elapsed_time>=3:
+                            elapsed_time = time.time() - start_time
+                            if elapsed_time >= 3:
                                 break
 
-                        start_time=time.time()
+                        start_time = time.time()
                         print("slightly down")
                         while True:
                             ser.write('q'.encode())
-                            elapsed_time=time.time()-start_time
-                            if elapsed_time>=6:
+                            elapsed_time = time.time() - start_time
+                            if elapsed_time >= 6:
                                 break
                             # detect catch
-                            print("faraway ",faraway)
-                            if faraway<16 and faraway>14:#if xywh[3]<0.47 and xywh[3]>0.42
-                                start_time=time.time()
+                            print("faraway ", faraway)
+                            if faraway < 16 and faraway > 14:  # if xywh[3]<0.47 and xywh[3]>0.42
+                                start_time = time.time()
                                 print("catch")
                                 while True:
-                                    ser.write('c'.encode())
-                                    elapsed_time=time.time()-start_time
-                                    if elapsed_time>=6:
-                                        break
-                                return_pos()      
-                                exit()                          
-                        # 2 mid
-                        if xywh[0]<0.71 and xywh[0]>0.57:
-                            if xywh[2]*xywh[3]>0.58:#ideal condition
-                                start_time=time.time()
-                                print("catch")
-                                while True:
-                                    ser.write('c'.encode())
-                                    elapsed_time=time.time()-start_time
-                                    if elapsed_time>=6:
-                                        break
-                                return_pos()      
-                                exit()
-                            print("x ",xywh[0])
-                            start_time=time.time()
-                            print("forward")
-                            while True:
-                                ser.write('f'.encode())
-                                elapsed_time=time.time()-start_time
-                                if elapsed_time>=3:
-                                    break
-
-                            start_time=time.time()
-                            print("slightly down")
-                            while True:
-                                ser.write('q'.encode())
-                                elapsed_time=time.time()-start_time
-                                if elapsed_time>=3:
-                                    break
-                            # detect catch
-                            print("faraway ",faraway)
-                            if faraway<16 and faraway>14:#if xywh[3]<0.47 and xywh[3]>0.42
-                                start_time=time.time()
-                                print("catch")
-                                while True:
-                                    ser.write('c'.encode())
-                                    elapsed_time=time.time()-start_time
-                                    if elapsed_time>=6:
+                                    ser.write('h'.encode())
+                                    elapsed_time = time.time() - start_time
+                                    if elapsed_time >= 6:
                                         break
                                 return_pos()
                                 exit()
-                        # 2 left            
-                        elif xywh[0]<0.57:
-                            print("x ",xywh[0])
-                            start_time=time.time()
+                                # 2 mid
+                        if xywh[0] < 0.71 and xywh[0] > 0.57:
+                            if xywh[2] > 0.49 or xywh[3] > 0.5:  # ideal condition
+                                start_time = time.time()
+                                print("catch")
+                                while True:
+                                    ser.write('h'.encode())
+                                    elapsed_time = time.time() - start_time
+                                    if elapsed_time >= 6:
+                                        break
+                                return_pos()
+                                exit()
+                            print("x ", xywh[0])
+                            start_time = time.time()
+                            print("forward")
+                            while True:
+                                ser.write('f'.encode())
+                                elapsed_time = time.time() - start_time
+                                if elapsed_time >= 3:
+                                    break
+
+                            start_time = time.time()
+                            print("slightly down")
+                            while True:
+                                ser.write('q'.encode())
+                                elapsed_time = time.time() - start_time
+                                if elapsed_time >= 3:
+                                    break
+                            # detect catch
+                            print("faraway ", faraway)
+                            if faraway < 16 and faraway > 14:  # if xywh[3]<0.47 and xywh[3]>0.42
+                                start_time = time.time()
+                                print("catch")
+                                while True:
+                                    ser.write('h'.encode())
+                                    elapsed_time = time.time() - start_time
+                                    if elapsed_time >= 6:
+                                        break
+                                return_pos()
+                                exit()
+                        # 2 left
+                        elif xywh[0] < 0.57:
+                            print("x ", xywh[0])
+                            start_time = time.time()
                             print("slightly turn left")
                             while True:
                                 ser.write('z'.encode())
-                                elapsed_time=time.time()-start_time
-                                if elapsed_time>=5:
+                                elapsed_time = time.time() - start_time
+                                if elapsed_time >= 5:
                                     break
-                            if xywh[2]*xywh[3]>0.58:#ideal condition
-                                start_time=time.time()
+                            if xywh[2] > 0.49 or xywh[3] > 0.5:  # ideal condition
+                                start_time = time.time()
                                 print("catch")
                                 while True:
-                                    ser.write('c'.encode())
-                                    elapsed_time=time.time()-start_time
-                                    if elapsed_time>=6:
-                                        break
-                                return_pos()      
-                                exit()
-
-                            start_time=time.time()
-                            print("forward")
-                            while True:
-                                ser.write('f'.encode())
-                                elapsed_time=time.time()-start_time
-                                if elapsed_time>=5:
-                                    break
-
-                            start_time=time.time()
-                            print("slightly down")
-                            while True:
-                                ser.write('q'.encode())
-                                elapsed_time=time.time()-start_time
-                                if elapsed_time>=6:
-                                    break
-                            # detect catch
-                            print("faraway ",faraway)
-                            if faraway<16 and faraway>14:#if xywh[3]<0.47 and xywh[3]>0.42
-                                start_time=time.time()
-                                print("catch")
-                                while True:
-                                    ser.write('c'.encode())
-                                    elapsed_time=time.time()-start_time
-                                    if elapsed_time>=6:
+                                    ser.write('h'.encode())
+                                    elapsed_time = time.time() - start_time
+                                    if elapsed_time >= 6:
                                         break
                                 return_pos()
                                 exit()
-                        # 2 right            
-                        else:            
-                            print("x ",xywh[0])
-                            start_time=time.time()
+
+                            start_time = time.time()
+                            print("forward")
+                            while True:
+                                ser.write('f'.encode())
+                                elapsed_time = time.time() - start_time
+                                if elapsed_time >= 5:
+                                    break
+
+                            start_time = time.time()
+                            print("slightly down")
+                            while True:
+                                ser.write('q'.encode())
+                                elapsed_time = time.time() - start_time
+                                if elapsed_time >= 6:
+                                    break
+                            # detect catch
+                            print("faraway ", faraway)
+                            if faraway < 16 and faraway > 14:  # if xywh[3]<0.47 and xywh[3]>0.42
+                                start_time = time.time()
+                                print("catch")
+                                while True:
+                                    ser.write('h'.encode())
+                                    elapsed_time = time.time() - start_time
+                                    if elapsed_time >= 6:
+                                        break
+                                return_pos()
+                                exit()
+                        # 2 right
+                        else:
+                            print("x ", xywh[0])
+                            start_time = time.time()
                             print("slightly turn right")
                             while True:
                                 ser.write('y'.encode())
-                                elapsed_time=time.time()-start_time
-                                if elapsed_time>=5:
+                                elapsed_time = time.time() - start_time
+                                if elapsed_time >= 5:
                                     break
-                            if xywh[2]*xywh[3]>0.58:#ideal condition
-                                start_time=time.time()
+                            if xywh[2] > 0.49 or xywh[3] > 0.5:  # ideal condition
+                                start_time = time.time()
                                 print("catch")
                                 while True:
-                                    ser.write('c'.encode())
-                                    elapsed_time=time.time()-start_time
-                                    if elapsed_time>=6:
-                                        break
-                                return_pos()      
-                                exit()
-
-                            start_time=time.time()
-                            print("forward")
-                            while True:
-                                ser.write('f'.encode())
-                                elapsed_time=time.time()-start_time
-                                if elapsed_time>=5:
-                                    break
-
-                            start_time=time.time()
-                            print("slightly down")
-                            while True:
-                                ser.write('q'.encode())
-                                elapsed_time=time.time()-start_time
-                                if elapsed_time>=6:
-                                    break
-                            # detect catch
-                            print("faraway ",faraway)
-                            if faraway<16 and faraway>14:#if xywh[3]<0.47 and xywh[3]>0.42
-                                start_time=time.time()
-                                print("catch")
-                                while True:
-                                    ser.write('c'.encode())
-                                    elapsed_time=time.time()-start_time
-                                    if elapsed_time>=6:
+                                    ser.write('h'.encode())
+                                    elapsed_time = time.time() - start_time
+                                    if elapsed_time >= 6:
                                         break
                                 return_pos()
                                 exit()
 
-                    # 1 right                
-                    else:#xywh[0]>0.72
-                        print("x ",xywh[0])
-                        start_time=time.time()
+                            start_time = time.time()
+                            print("forward")
+                            while True:
+                                ser.write('f'.encode())
+                                elapsed_time = time.time() - start_time
+                                if elapsed_time >= 5:
+                                    break
+
+                            start_time = time.time()
+                            print("slightly down")
+                            while True:
+                                ser.write('q'.encode())
+                                elapsed_time = time.time() - start_time
+                                if elapsed_time >= 6:
+                                    break
+                            # detect catch
+                            print("faraway ", faraway)
+                            if faraway < 16 and faraway > 14:  # if xywh[3]<0.47 and xywh[3]>0.42
+                                start_time = time.time()
+                                print("catch")
+                                while True:
+                                    ser.write('h'.encode())
+                                    elapsed_time = time.time() - start_time
+                                    if elapsed_time >= 6:
+                                        break
+                                return_pos()
+                                exit()
+
+                    # 1 right
+                    else:  # xywh[0]>0.72
+                        print("x ", xywh[0])
+                        start_time = time.time()
                         print("slightly turn right")
                         while True:
                             ser.write('y'.encode())
-                            elapsed_time=time.time()-start_time
-                            if elapsed_time>=5:
+                            elapsed_time = time.time() - start_time
+                            if elapsed_time >= 5:
                                 break
-                        if xywh[2]*xywh[3]>0.58:#ideal condition
-                            start_time=time.time()
+                        if xywh[2] > 0.49 or xywh[3] > 0.5:  # ideal condition
+                            start_time = time.time()
                             print("catch")
                             while True:
-                                ser.write('c'.encode())
-                                elapsed_time=time.time()-start_time
-                                if elapsed_time>=6:
+                                ser.write('h'.encode())
+                                elapsed_time = time.time() - start_time
+                                if elapsed_time >= 6:
                                     break
-                            return_pos()      
+                            return_pos()
                             exit()
 
-                        start_time=time.time()
+                        start_time = time.time()
                         print("forward")
                         while True:
                             ser.write('f'.encode())
-                            elapsed_time=time.time()-start_time
-                            if elapsed_time>=5:
+                            elapsed_time = time.time() - start_time
+                            if elapsed_time >= 5:
                                 break
 
-                        start_time=time.time()
+                        start_time = time.time()
                         print("slightly down")
                         while True:
                             ser.write('q'.encode())
-                            elapsed_time=time.time()-start_time
-                            if elapsed_time>=6:
+                            elapsed_time = time.time() - start_time
+                            if elapsed_time >= 6:
                                 break
                             # detect catch
-                            print("faraway ",faraway)
-                            if faraway<16 and faraway>14:#if xywh[3]<0.47 and xywh[3]>0.42
-                                start_time=time.time()
+                            print("faraway ", faraway)
+                            if faraway < 16 and faraway > 14:  # if xywh[3]<0.47 and xywh[3]>0.42
+                                start_time = time.time()
                                 print("catch")
                                 while True:
-                                    ser.write('c'.encode())
-                                    elapsed_time=time.time()-start_time
-                                    if elapsed_time>=6:
-                                        break
-                                return_pos()      
-                                exit()                          
-                        # 2 mid
-                        if xywh[0]<0.71 and xywh[0]>0.57:
-                            print("x ",xywh[0])
-                            start_time=time.time()
-                            print("forward")
-                            while True:
-                                ser.write('f'.encode())
-                                elapsed_time=time.time()-start_time
-                                if elapsed_time>=5:
-                                    break
-                            if xywh[2]*xywh[3]>0.58:#ideal condition
-                                start_time=time.time()
-                                print("catch")
-                                while True:
-                                    ser.write('c'.encode())
-                                    elapsed_time=time.time()-start_time
-                                    if elapsed_time>=6:
-                                        break
-                                return_pos()      
-                                exit()
-
-                            start_time=time.time()
-                            print("slightly down")
-                            while True:
-                                ser.write('q'.encode())
-                                elapsed_time=time.time()-start_time
-                                if elapsed_time>=6:
-                                    break
-                            # detect catch
-                            print("faraway ",faraway)
-                            if faraway<16 and faraway>14:#if xywh[3]<0.47 and xywh[3]>0.42
-                                start_time=time.time()
-                                print("catch")
-                                while True:
-                                    ser.write('c'.encode())
-                                    elapsed_time=time.time()-start_time
-                                    if elapsed_time>=6:
+                                    ser.write('h'.encode())
+                                    elapsed_time = time.time() - start_time
+                                    if elapsed_time >= 6:
                                         break
                                 return_pos()
                                 exit()
-                        # 2 left            
-                        elif xywh[0]<0.57:
-                            print("x ",xywh[0])
-                            start_time=time.time()
+                                # 2 mid
+                        if xywh[0] < 0.71 and xywh[0] > 0.57:
+                            print("x ", xywh[0])
+                            start_time = time.time()
+                            print("forward")
+                            while True:
+                                ser.write('f'.encode())
+                                elapsed_time = time.time() - start_time
+                                if elapsed_time >= 5:
+                                    break
+                            if xywh[2] > 0.49 or xywh[3] > 0.5:  # ideal condition
+                                start_time = time.time()
+                                print("catch")
+                                while True:
+                                    ser.write('h'.encode())
+                                    elapsed_time = time.time() - start_time
+                                    if elapsed_time >= 6:
+                                        break
+                                return_pos()
+                                exit()
+
+                            start_time = time.time()
+                            print("slightly down")
+                            while True:
+                                ser.write('q'.encode())
+                                elapsed_time = time.time() - start_time
+                                if elapsed_time >= 6:
+                                    break
+                            # detect catch
+                            print("faraway ", faraway)
+                            if faraway < 16 and faraway > 14:  # if xywh[3]<0.47 and xywh[3]>0.42
+                                start_time = time.time()
+                                print("catch")
+                                while True:
+                                    ser.write('h'.encode())
+                                    elapsed_time = time.time() - start_time
+                                    if elapsed_time >= 6:
+                                        break
+                                return_pos()
+                                exit()
+                        # 2 left
+                        elif xywh[0] < 0.57:
+                            print("x ", xywh[0])
+                            start_time = time.time()
                             print("slightly turn left")
                             while True:
                                 ser.write('z'.encode())
-                                elapsed_time=time.time()-start_time
-                                if elapsed_time>=5:
+                                elapsed_time = time.time() - start_time
+                                if elapsed_time >= 5:
                                     break
-                            if xywh[2]*xywh[3]>0.58:#ideal condition
-                                start_time=time.time()
+                            if xywh[2] > 0.49 or xywh[3] > 0.5:  # ideal condition
+                                start_time = time.time()
                                 print("catch")
                                 while True:
-                                    ser.write('c'.encode())
-                                    elapsed_time=time.time()-start_time
-                                    if elapsed_time>=6:
-                                        break
-                                return_pos()      
-                                exit()
-
-                            start_time=time.time()
-                            print("forward")
-                            while True:
-                                ser.write('f'.encode())
-                                elapsed_time=time.time()-start_time
-                                if elapsed_time>=5:
-                                    break
-
-                            start_time=time.time()
-                            print("slightly down")
-                            while True:
-                                ser.write('q'.encode())
-                                elapsed_time=time.time()-start_time
-                                if elapsed_time>=6:
-                                    break
-                            # detect catch
-                            print("faraway ",faraway)
-                            if faraway<16 and faraway>14:#if xywh[3]<0.47 and xywh[3]>0.42
-                                start_time=time.time()
-                                print("catch")
-                                while True:
-                                    ser.write('c'.encode())
-                                    elapsed_time=time.time()-start_time
-                                    if elapsed_time>=6:
+                                    ser.write('h'.encode())
+                                    elapsed_time = time.time() - start_time
+                                    if elapsed_time >= 6:
                                         break
                                 return_pos()
                                 exit()
-                        # 2 right            
-                        else:            
-                            print("x ",xywh[0])
-                            start_time=time.time()
-                            print("slightly turn right")
-                            while True:
-                                ser.write('y'.encode())
-                                elapsed_time=time.time()-start_time
-                                if elapsed_time>=5:
-                                    break
-                            if xywh[2]*xywh[3]>0.58:#ideal condition
-                                start_time=time.time()
-                                print("catch")
-                                while True:
-                                    ser.write('c'.encode())
-                                    elapsed_time=time.time()-start_time
-                                    if elapsed_time>=6:
-                                        break     
-                                return_pos() 
-                                exit()
 
-                            start_time=time.time()
+                            start_time = time.time()
                             print("forward")
                             while True:
                                 ser.write('f'.encode())
-                                elapsed_time=time.time()-start_time
-                                if elapsed_time>=5:
+                                elapsed_time = time.time() - start_time
+                                if elapsed_time >= 5:
                                     break
 
-                            start_time=time.time()
+                            start_time = time.time()
                             print("slightly down")
                             while True:
                                 ser.write('q'.encode())
-                                elapsed_time=time.time()-start_time
-                                if elapsed_time>=6:
+                                elapsed_time = time.time() - start_time
+                                if elapsed_time >= 6:
                                     break
                             # detect catch
-                            print("faraway ",faraway)
-                            if faraway<16 and faraway>14:#if xywh[3]<0.47 and xywh[3]>0.42
-                                start_time=time.time()
+                            print("faraway ", faraway)
+                            if faraway < 16 and faraway > 14:  # if xywh[3]<0.47 and xywh[3]>0.42
+                                start_time = time.time()
                                 print("catch")
                                 while True:
-                                    ser.write('c'.encode())
-                                    elapsed_time=time.time()-start_time
-                                    if elapsed_time>=6:
+                                    ser.write('h'.encode())
+                                    elapsed_time = time.time() - start_time
+                                    if elapsed_time >= 6:
+                                        break
+                                return_pos()
+                                exit()
+                        # 2 right
+                        else:
+                            print("x ", xywh[0])
+                            start_time = time.time()
+                            print("slightly turn right")
+                            while True:
+                                ser.write('y'.encode())
+                                elapsed_time = time.time() - start_time
+                                if elapsed_time >= 5:
+                                    break
+                            if xywh[2] > 0.49 or xywh[3] > 0.5:  # ideal condition
+                                start_time = time.time()
+                                print("catch")
+                                while True:
+                                    ser.write('h'.encode())
+                                    elapsed_time = time.time() - start_time
+                                    if elapsed_time >= 6:
+                                        break
+                                return_pos()
+                                exit()
+
+                            start_time = time.time()
+                            print("forward")
+                            while True:
+                                ser.write('f'.encode())
+                                elapsed_time = time.time() - start_time
+                                if elapsed_time >= 5:
+                                    break
+
+                            start_time = time.time()
+                            print("slightly down")
+                            while True:
+                                ser.write('q'.encode())
+                                elapsed_time = time.time() - start_time
+                                if elapsed_time >= 6:
+                                    break
+                            # detect catch
+                            print("faraway ", faraway)
+                            if faraway < 16 and faraway > 14:  # if xywh[3]<0.47 and xywh[3]>0.42
+                                start_time = time.time()
+                                print("catch")
+                                while True:
+                                    ser.write('h'.encode())
+                                    elapsed_time = time.time() - start_time
+                                    if elapsed_time >= 6:
                                         break
                                 return_pos()
                                 exit()
