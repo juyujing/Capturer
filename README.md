@@ -2,7 +2,7 @@
 
 This is a project to Capturer using YOLOv7.
 
-## Introduction
+## Video Presentation
 [![Hexapod Robot](https://res.cloudinary.com/marcomontalbano/image/upload/v1716715642/video_to_markdown/images/youtube--DM378_XFm8g-c05b58ac6eb4c4700831b2b3070cd403.jpg)](https://youtu.be/DM378_XFm8g "Hexapod Robot")
 
 ## Web Code Repository
