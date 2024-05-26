@@ -41,7 +41,7 @@ cd /capturer
 
 Deploy the ActionSet File Config.ini on 24-Way steering geer control board and boot it.
 
-Deploy the File connect_adruino_jetsonnano.py on Adruino Uno and boot it.
+Deploy the File connect_arduino_jetsonnano.py on Adruino Uno and boot it.
 
 Deploy the Code Folder on Jetson Nano and run the following command:
 
