@@ -2,6 +2,9 @@
 
 This is a project to Capturer using YOLOv7.
 
+## introduction
+[![Hexapod Robot](https://res.cloudinary.com/marcomontalbano/image/upload/v1716715642/video_to_markdown/images/youtube--DM378_XFm8g-c05b58ac6eb4c4700831b2b3070cd403.jpg)](https://youtu.be/DM378_XFm8g "Hexapod Robot")
+
 ## Web Code Repository
 
 - Integrated into [Capturer 🤗](https://github.com/juyujing/Capturer) using [yolov7](https://github.com/WongKinYiu/yolov7). Try to use the latest version of [Capturer](https://github.com/juyujing/Capturer)！
