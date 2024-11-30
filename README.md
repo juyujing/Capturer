@@ -56,3 +56,7 @@ python detect.py
 - cfg: cfg/training/yovov7-snail.yaml
 - data: data/snail.yaml
 - img_size: 640
+
+## 📚 License
+This work is licensed under a Creative Commons Attribution 4.0 International License (CC BY 4.0).
+For commercial purposes, please contact [yj2012@hw.ac.uk] to obtain explicit permission.
